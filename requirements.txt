@@ -1,0 +1,6 @@
+flask
+psycopg2-binary
+qrcode
+requests
+beautifulsoup4
+gunicorn

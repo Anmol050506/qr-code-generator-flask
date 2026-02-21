@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="/static/styles.css">
+        <link rel="icon" type="image/svg+xml" href="/static/qricon.svg">
+        <title>QR Code Generator</title>
+    </head>
+
+    <body>
+
+        <div class="container">
+
+            <div class="sidebar">
+                <h3>History</h3>
+                <input type="text" id="historySearch" placeholder="Search history..." class="search-input">
+
+                {% if history %}
+                    {% for item in history %}
+                        <div class="history-card">
+
+                            <div class="history-title">
+
+                                {% set domain = item[1].replace('https://','').replace('http://','').split('/')[0] %}
+
+                                <img class="favicon"
+                                    src="https://www.google.com/s2/favicons?domain={{ domain }}"
+                                    alt="favicon">
+
+                                <span class="title-text">
+                                    {{ item[4] if item[4] else "Untitled" }}
+                                </span>
+
+                            </div>
+
+                            <div class="history-date">
+                                {{ item[3] }}
+                            </div>
+
+                            <div class="history-link">
+
+                                <a href="{{ item[1] }}" target="_blank">
+                                    {{ item[1] }}
+                                </a>
+
+                                <span class="copy-icon" data-link="{{ item[1] }}" title="Copy link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M6.9998 6V3C6.9998 2.44772 7.44752 2 7.9998 2H19.9998C20.5521 2 20.9998 2.44772 20.9998 3V17C20.9998 17.5523 20.5521 18 19.9998 18H16.9998V20.9991C16.9998 21.5519 16.5499 22 15.993 22H4.00666C3.45059 22 3 21.5554 3 20.9991L3.0026 7.00087C3.0027 6.44811 3.45264 6 4.00942 6H6.9998ZM5.00242 8L5.00019 20H14.9998V8H5.00242ZM8.9998 6H16.9998V16H18.9998V4H8.9998V6Z"/>
+                                    </svg>
+                                </span>
+
+                            </div>
+
+                            <span class="domain-badge">
+                                {{ domain }}
+                            </span>
+
+                            <div class="history-actions">
+                                <a href="#"
+                                    class="view-btn"
+                                    data-image="{{ url_for('static', filename='qr_codes/' + item[2]) }}">
+                                    View<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12.0003 3C17.3924 3 21.8784 6.87976 22.8189 12C21.8784 17.1202 17.3924 21 12.0003 21C6.60812 21 2.12215 17.1202 1.18164 12C2.12215 6.87976 6.60812 3 12.0003 3ZM12.0003 19C16.2359 19 19.8603 16.052 20.7777 12C19.8603 7.94803 16.2359 5 12.0003 5C7.7646 5 4.14022 7.94803 3.22278 12C4.14022 16.052 7.7646 19 12.0003 19ZM12.0003 16.5C9.51498 16.5 7.50026 14.4853 7.50026 12C7.50026 9.51472 9.51498 7.5 12.0003 7.5C14.4855 7.5 16.5003 9.51472 16.5003 12C16.5003 14.4853 14.4855 16.5 12.0003 16.5ZM12.0003 14.5C13.381 14.5 14.5003 13.3807 14.5003 12C14.5003 10.6193 13.381 9.5 12.0003 9.5C10.6196 9.5 9.50026 10.6193 9.50026 12C9.50026 13.3807 10.6196 14.5 12.0003 14.5Z"></path></svg>
+                                </a>
+
+                                <a href="{{ url_for('download', filename=item[2]) }}">
+                                    Download<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 19H21V21H3V19ZM13 13.1716L19.0711 7.1005L20.4853 8.51472L12 17L3.51472 8.51472L4.92893 7.1005L11 13.1716V2H13V13.1716Z"></path></svg>
+                                </a>
+
+                                <a href="#"
+                                    class="delete-btn"
+                                    data-delete-url="{{ url_for('delete', id=item[0]) }}"
+                                    data-title="{{ item[4] if item[4] else 'Untitled' }}">
+                                    Delete<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17 6H22V8H20V21C20 21.5523 19.5523 22 19 22H5C4.44772 22 4 21.5523 4 21V8H2V6H7V3C7 2.44772 7.44772 2 8 2H16C16.5523 2 17 2.44772 17 3V6ZM18 8H6V20H18V8ZM9 11H11V17H9V11ZM13 11H15V17H13V11ZM9 4V6H15V4H9Z"></path></svg>
+                                </a>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No history yet</p>
+                {% endif %}
+            </div>
+
+            <div class="main">
+                <h1>QR Code Generator</h1>
+
+                <form method="POST">
+                    <input type="text" name="link" placeholder="Enter your link here" class="main-input">
+                    <button type="submit" class="generate-btn">Generate</button>
+                </form>
+
+                {% if error %}
+                    <p class="error">{{error}}</p>
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+        <div id="qrModal" class="modal" onclick="closeModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <img id="modalImage" src="">
+            </div>
+        </div>
+
+        <div id="deleteModal" class="modal" onclick="closeDeleteModal()">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <h3 id="deleteText">Delete QR?</h3>
+                <p>This action cannot be undone.</p>
+
+                <div class="modal-buttons">
+                    <button id="confirmDelete" class="confirm-btn">Confirm</button>
+                    <button onclick="closeDeleteModal()" class="cancel-btn">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        const searchInput = document.getElementById("historySearch");
+
+        searchInput.addEventListener("input", function() {
+            const query = this.value.toLowerCase();
+            const cards = document.querySelectorAll(".history-card");
+
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+
+        document.querySelectorAll(".view-btn").forEach(button => {
+            button.addEventListener("click", function(e) {
+                e.preventDefault();
+                const imageSrc = this.getAttribute("data-image");
+                openModal(imageSrc);
+            });
+        });
+
+        function openModal(imageSrc) {
+            document.getElementById("modalImage").src = imageSrc;
+            document.getElementById("qrModal").style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById("qrModal").style.display = "none";
+        }
+
+        document.querySelectorAll(".copy-icon").forEach(icon => {
+            icon.addEventListener("click", function() {
+                const link = this.getAttribute("data-link");
+
+                navigator.clipboard.writeText(link).then(() => {
+                    this.classList.add("copied");
+
+                    setTimeout(() => {
+                        this.classList.remove("copied");
+                    }, 1200);
+                });
+            });
+        });
+
+        let deleteUrl = null;
+
+        document.querySelectorAll(".delete-btn").forEach(button => {
+            button.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                deleteUrl = this.getAttribute("data-delete-url");
+                const title = this.getAttribute("data-title");
+
+                document.getElementById("deleteText").textContent =
+                    `Delete ${title}-QR?`;
+
+                document.getElementById("deleteModal").style.display = "flex";
+            });
+        });
+
+        function closeDeleteModal() {
+            document.getElementById("deleteModal").style.display = "none";
+            deleteUrl = null;
+        }
+
+        document.getElementById("confirmDelete").addEventListener("click", function() {
+            if (deleteUrl) {
+                window.location.href = deleteUrl;
+            }
+        });
+        </script>
+
+    </body>
+</html>
