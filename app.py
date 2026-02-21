@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, send_file
+from flask import abort
 import requests
 from bs4 import BeautifulSoup
 import psycopg2
@@ -118,15 +119,18 @@ def download(filename):
 
     path = os.path.join(QR_FOLDER, filename)
 
+    if not os.path.exists(path):
+        abort(404)
+
     if result:
         title, link = result
 
-        # Extract domain from link
         domain = link.replace("https://", "").replace("http://", "")
         domain = domain.split("/")[0]
 
-        # Clean filename (remove invalid characters)
-        safe_title = "".join(c for c in title if c.isalnum() or c in (" ", "_", "-")).strip()
+        safe_title = "".join(
+            c for c in title if c.isalnum() or c in (" ", "_", "-")
+        ).strip()
 
         download_name = f"{safe_title}({domain})-qr.png"
     else:
