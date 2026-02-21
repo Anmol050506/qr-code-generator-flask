@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 QR_FOLDER = "static/qr_codes"
+os.makedirs(QR_FOLDER, exist_ok=True)
 
 def get_connection():
     return psycopg2.connect(DATABASE_URL)
