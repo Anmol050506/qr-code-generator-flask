@@ -34,6 +34,23 @@ A full-stack QR Code Generator built using Flask and PostgreSQL.
 
 Deployed using Render with PostgreSQL database.
 
+## 📸 Screenshots
+
+### Home Page
+![Home](screenshots/screenshot-home.png)
+
+### History After Generation
+![History](screenshots/screenshot-history.png)
+
+### QR Preview Modal
+![Modal](screenshots/screenshot-modal.png)
+
+### Delete Confirmation
+![Delete](screenshots/screenshot-delete.png)
+
+### Deployment on Render
+![Deploy](screenshots/screenshot-deploy.png)
+
 ## Author
 
 Anmol Chaudhary
