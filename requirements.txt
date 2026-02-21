@@ -4,3 +4,4 @@ qrcode
 requests
 beautifulsoup4
 gunicorn
+Pillow
