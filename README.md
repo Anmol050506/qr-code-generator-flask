@@ -37,19 +37,19 @@ Deployed using Render with PostgreSQL database.
 ## 📸 Screenshots
 
 ### Home Page
-![Home](screenshots/screenshot-home.png)
+![Home](screenshots/screenshot-home.PNG)
 
 ### History After Generation
-![History](screenshots/screenshot-history.png)
+![History](screenshots/screenshot-history.PNG)
 
 ### QR Preview Modal
-![Modal](screenshots/screenshot-modal.png)
+![Modal](screenshots/screenshot-modal.PNG)
 
 ### Delete Confirmation
-![Delete](screenshots/screenshot-delete.png)
+![Delete](screenshots/screenshot-delete.PNG)
 
 ### Deployment on Render
-![Deploy](screenshots/screenshot-deploy.png)
+![Deploy](screenshots/screenshot-deploy.PNG)
 
 ## Author
 
